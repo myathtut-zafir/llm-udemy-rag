@@ -11,6 +11,8 @@ python-dotenv = "*"
 langchainhub = "*"
 langchain-pinecone = "*"
 langchain-community = "*"
+pypdf = "*"
+faiss-cpu = "*"
 
 [dev-packages]
 

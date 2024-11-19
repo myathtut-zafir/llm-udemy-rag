@@ -21,6 +21,17 @@ if __name__=='__main__':
     docs=text_splitter.split_documents(documents=documents)
     embeddings=OpenAIEmbeddings()
     vectorstore=FAISS.from_documents(docs,embedding=embeddings)
+    vectorstore.save_local('faiss_index_react')
+    new_vs_store=FAISS.load_local("faiss_index_react",embeddings=embeddings,allow_dangerous_deserialization=True)
+    
+    llm= ChatOpenAI()
+    retrieval_qa_chat_prompt=hub.pull("langchain-ai/retrieval-qa-chat")
+    combine_docs=create_stuff_documents_chain(llm,retrieval_qa_chat_prompt)
+    retrieval_chain=create_retrieval_chain(retriever=new_vs_store.as_retriever(),combine_docs_chain=combine_docs)
+
+    result=retrieval_chain.invoke(input={"input":"give me the gist of React in 3 sentences"})
+    print(result["answer"])
+    
     
     
     
